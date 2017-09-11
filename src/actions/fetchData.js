@@ -1,5 +1,4 @@
-import { fromJS } from '../../node_modules/immutable/dist/immutable';
-
+import { fromJS } from 'immutable';
 
 export const SAVE_SERVER_DATA = 'SAVE_SERVER_DATA';
 export const saveServerData = data => ({
@@ -11,8 +10,8 @@ export const saveServerData = data => ({
  * Example for an async actions, requires redux thunk middleware
  * //redux.js.org/docs/advanced/AsyncActions
  */
-export const loadData = () => dispatch => {
+export const loadData = () => (dispatch) => {
     fetch('https://jsonplaceholder.typicode.com/todos')
         .then(res => res.json())
-        .then(data => dispatch(saveServerData(fromJS(data))))
+        .then(data => dispatch(saveServerData(fromJS(data))));
 };

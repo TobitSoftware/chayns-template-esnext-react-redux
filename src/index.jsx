@@ -25,7 +25,7 @@ const store = createStore(
 );
 
 if (DEV || QA) {
-    store.subscribe(() => console.log('state:',store.getState()));
+    store.subscribe(() => console.log('state:', store.getState()));
 }
 
 /**
@@ -33,7 +33,7 @@ if (DEV || QA) {
  * @param Component
  */
 const tappElement = document.querySelector('.tapp');
-const render = Component => {
+const render = (Component) => {
     ReactDOM.render(
         <AppContainer>
             <Provider store={store}>

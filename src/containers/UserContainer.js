@@ -25,4 +25,4 @@ UserContainer.propTypes = {
     userId: PropTypes.number.isRequired
 };
 
-export default UserContainer
+export default UserContainer;
