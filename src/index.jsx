@@ -4,45 +4,11 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import immutable from 'immutable';
-import { AppContainer } from 'react-hot-loader';
 import { ModeSwitch } from 'chayns-components';
 import App from './components/App';
 import rootReducer from './reducers';
-import { DEV, QA } from './constants/environment';
 import SERVER_URL from './constants/server-url';
 import { loadData } from './actions/fetchData';
-
-delete AppContainer.prototype.unstable_handleError; // disables ErrorPage of HotModuleReplacement
-
-if (DEV || QA) {
-    const installDevTools = require('immutable-devtools');
-    installDevTools(immutable);
-}
-
-const store = createStore(
-    rootReducer,
-    applyMiddleware(thunk)
-);
-
-if (DEV || QA) {
-    store.subscribe(() => console.log('state:', store.getState()));
-}
-
-/**
- * Renders a component as entry point of your application into the tapp element.
- * @param Component
- */
-const tappElement = document.querySelector('.tapp');
-const render = (Component) => {
-    ReactDOM.render(
-        <AppContainer>
-            <Provider store={store}>
-                <Component/>
-            </Provider>
-        </AppContainer>,
-        tappElement
-    );
-};
 
 /**
  * The function waits till the chayns api is successfully loaded and
@@ -52,35 +18,46 @@ const render = (Component) => {
  * @return {Promise.<void>}
  */
 async function init() {
-    try {
-        console.debug('ServerUrl for current environment:', SERVER_URL);
+    console.debug('ServerUrl for current environment:', SERVER_URL);
 
-        await chayns.ready;
-
-        render(App);
-
-        // use hot-module-replacement if available
-        if (module.hot) {
-            module.hot.accept('./components/App', () => render(App));
-        }
-
-        /**
-         * Initialize the ModeSwitch. The available modes are 'user mode' (default) and 'chayns® manager'.
-         * You can specify content to display according to the current mode (see chayns 'mode' component).
-         */
-        ModeSwitch.init({
-            groups: [{
-                id: 1,
-                uacIds: [1],
-                name: 'chayns® manager'
-            }]
-        });
-
-        // dispatch async example action
-        store.dispatch(loadData());
-    } catch (err) {
-        console.warn('no chayns environment found');
+    if (__DEV__ || __QA__) {
+        const installDevTools = require('immutable-devtools');
+        installDevTools(immutable);
     }
+
+    const storeMiddleware = [thunk];
+
+    if (__DEV__ || __QA__) {
+        storeMiddleware.push(require('redux-logger').default);
+    }
+
+    console.log(storeMiddleware);
+    const store = createStore(
+        rootReducer,
+        applyMiddleware(...storeMiddleware)
+    );
+
+    await chayns.ready;
+
+    const tappElement = document.querySelector('.tapp');
+    ReactDOM.render(<Provider store={store}>
+        <App />
+    </Provider>, tappElement);
+
+    /**
+     * Initialize the ModeSwitch. The available modes are 'user mode' (default) and 'chayns® manager'.
+     * You can specify content to display according to the current mode (see chayns 'mode' component).
+     */
+    ModeSwitch.init({
+        groups: [{
+            id: 1,
+            uacIds: [1],
+            name: 'chayns® manager'
+        }]
+    });
+
+    // dispatch async example action
+    store.dispatch(loadData());
 }
 
 init();
