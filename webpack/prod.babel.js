@@ -10,9 +10,6 @@ export default merge(
     common,
     {
         mode: 'production',
-        output: {
-            filename: '[name].bundle.js?[hash]',
-        },
         devtool: 'hidden-source-map',
         plugins: [
             new HtmlWebpackPlugin({

@@ -19,6 +19,9 @@ export default merge(
     common,
     {
         mode: 'development',
+        output: {
+            filename: '[name].bundle.js',
+        },
         devServer: {
             host: '0.0.0.0',
             port: 8080,

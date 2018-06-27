@@ -20,14 +20,14 @@ import { loadData } from './actions/fetchData';
 async function init() {
     console.debug('ServerUrl for current environment:', SERVER_URL);
 
-    if (__DEV__ || __QA__) {
+    if (__DEV__ || __STAGING__) {
         const installDevTools = require('immutable-devtools');
         installDevTools(immutable);
     }
 
     const storeMiddleware = [thunk];
 
-    if (__DEV__ || __QA__) {
+    if (__DEV__ || __STAGING__) {
         storeMiddleware.push(require('redux-logger').default);
     }
 
@@ -41,7 +41,7 @@ async function init() {
 
     const tappElement = document.querySelector('.tapp');
     ReactDOM.render(<Provider store={store}>
-        <App />
+        <App/>
     </Provider>, tappElement);
 
     /**
