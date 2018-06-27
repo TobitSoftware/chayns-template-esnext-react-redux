@@ -12,6 +12,7 @@ try {
     ssl.cert = fs.readFileSync(path.join(__dirname, 'ssl', 'ssl.crt'));
     ssl.key = fs.readFileSync(path.join(__dirname, 'ssl', 'ssl.key'));
 } catch (e) {
+    // eslint-disable-next-line no-console
     console.log('\n---------------------------\nNo SSL Certificate found.\n---------------------------\n');
 }
 
@@ -38,9 +39,9 @@ export default merge(
                 template: path.resolve(ROOT_PATH, 'src/index.dev.html')
             }),
             new webpack.DefinePlugin({
-                '__DEV__': true,
-                '__STAGING__': false,
-                '__PROD__': false,
+                __DEV__: true,
+                __STAGING__: false,
+                __PROD__: false,
             }),
             new webpack.HotModuleReplacementPlugin(),
             new webpack.LoaderOptionsPlugin({

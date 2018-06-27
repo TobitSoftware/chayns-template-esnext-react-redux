@@ -16,9 +16,9 @@ export default merge(
                 template: path.resolve(ROOT_PATH, 'src/index.html')
             }),
             new webpack.DefinePlugin({
-                '__DEV__': false,
-                '__STAGING__': false,
-                '__PROD__': true,
+                __DEV__: false,
+                __STAGING__: false,
+                __PROD__: true,
             }),
         ]
     }
